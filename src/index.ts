@@ -4,8 +4,7 @@ dotenv.config();
 import cors from "cors";
 import express, { Application, Request, Response } from 'express';
 import AuthRouter from "./routers/auth.router";
-// import AuthRouter from "./routers/auth.router";
-// import { AuthRouter } from "./routers/auth.router";
+import testRouter from "./routers/test.route"; // ✅ Tambahkan import ini
 
 
 
@@ -24,6 +23,8 @@ app.get('/api', (req: Request, res: Response) => {
 // Perbaikan: Hindari nama variabel yang sama dengan class
 const authRouter = new AuthRouter();
 app.use("/api/auth", authRouter.getRouter());
+app.use("/api", testRouter); // ✅ Mount test router di /api
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

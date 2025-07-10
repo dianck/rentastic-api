@@ -16,6 +16,7 @@ class AuthRouter {
     initializeRoutes() {
         this.router.post("/register", this.authController.register);
         this.router.patch("/verify", verify_1.verifyTokenVerification, this.authController.verify);
+        this.router.post("/login", this.authController.login);
     }
     getRouter() {
         this.initializeRoutes();

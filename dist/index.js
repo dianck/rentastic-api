@@ -8,8 +8,7 @@ dotenv_1.default.config();
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const auth_router_1 = __importDefault(require("./routers/auth.router"));
-// import AuthRouter from "./routers/auth.router";
-// import { AuthRouter } from "./routers/auth.router";
+const test_route_1 = __importDefault(require("./routers/test.route")); // ✅ Tambahkan import ini
 const PORT = 8000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -21,6 +20,7 @@ app.get('/api', (req, res) => {
 // Perbaikan: Hindari nama variabel yang sama dengan class
 const authRouter = new auth_router_1.default();
 app.use("/api/auth", authRouter.getRouter());
+app.use("/api", test_route_1.default); // ✅ Mount test router di /api
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
