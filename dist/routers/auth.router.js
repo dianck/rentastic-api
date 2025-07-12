@@ -17,6 +17,10 @@ class AuthRouter {
         this.router.post("/register", this.authController.register);
         this.router.patch("/verify", verify_1.verifyTokenVerification, this.authController.verify);
         this.router.post("/login", this.authController.login);
+        this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
+        this.router.patch("/verify-reset-pwd", verify_1.verifyTokenVerification, this.authController.verifyResetPassword);
+        // this.router.post("/reset-pwd", this.authController.resetPassword.bind(this.authController));        
+        this.router.post("/reset-pwd", this.authController.resetPassword);
     }
     getRouter() {
         this.initializeRoutes();
