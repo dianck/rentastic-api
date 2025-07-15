@@ -1,8 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 import { testPrismaConnection } from '../controllers/prismaTest.controller';
+import { authenticateToken } from '../middlewares/auth';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/test-prisma', testPrismaConnection);
+// Terapkan middleware otentikasi
+router.get('/test-prisma', authenticateToken, testPrismaConnection);
 
 export default router;
