@@ -44,7 +44,7 @@ export default class AuthRouter{
     }
 
     public getRouter(): Router{
-        // this.initializeRoutes();
+        this.initializeRoutes();
         return this.router;
     }
 }
