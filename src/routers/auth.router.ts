@@ -2,8 +2,15 @@ import { Router } from "express";
 import AuthController from "../controllers/auth.controller";
 import { verifyTokenVerification } from "../middlewares/verify";
 import { authenticateToken } from "../middlewares/auth";
+import rateLimit from "express-rate-limit";
 
 // import { verifyToken } from "../middlewares/verify";
+
+const registerLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 menit
+    max: 3, // Maks 5 kali register per IP per 10 menit
+    message: "Too many registration attempts. Please try again later."
+  });
 
 
 export default class AuthRouter{
@@ -17,7 +24,7 @@ export default class AuthRouter{
     }
 
     private initializeRoutes(){
-        this.router.post("/register", authenticateToken, this.authController.register);
+        this.router.post("/register", this.authController.register);
         this.router.patch(
             "/verify", 
             verifyTokenVerification, 
