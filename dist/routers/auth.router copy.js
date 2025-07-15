@@ -30,7 +30,7 @@ class AuthRouter {
         this.router.post("/reset-pwd", this.authController.resetPassword);
     }
     getRouter() {
-        // this.initializeRoutes();
+        this.initializeRoutes();
         return this.router;
     }
 }

@@ -32,7 +32,6 @@ exports.testPrismaConnection = testPrismaConnection;
 curl -X GET http://localhost:8000/api/test-prisma
 
 
-curl -X GET https://cash-mgmt-be.vercel.app/api/test-prisma \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+curl -X GET https://cash-mgmt-be.vercel.app/api/test-prisma \ -H "Authorization: Bearer AsdQweZxc"
  
  */ 
