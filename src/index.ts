@@ -24,7 +24,7 @@ app.get('/api', (req: Request, res: Response) => {
 const authRouter = new AuthRouter();
 app.use("/api/auth", authRouter.getRouter());
 app.use("/api", testRouter); // ✅ Mount test router di /api
-
+app.set("trust proxy", true);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
