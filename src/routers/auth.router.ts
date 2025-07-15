@@ -24,7 +24,7 @@ export default class AuthRouter{
     }
 
     private initializeRoutes(){
-        this.router.post("/register", this.authController.register);
+        this.router.post("/register", registerLimiter, this.authController.register);
         this.router.patch(
             "/verify", 
             verifyTokenVerification, 
