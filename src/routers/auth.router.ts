@@ -30,6 +30,7 @@ export default class AuthRouter{
             verifyTokenVerification, 
         this.authController.verify);
         this.router.post("/login", this.authController.login);
+        // this.router.post("/login", authenticateToken, this.authController.login);
         this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
 
         this.router.patch(

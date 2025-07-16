@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_controller_1 = __importDefault(require("../controllers/auth.controller"));
 const verify_1 = require("../middlewares/verify");
-const auth_1 = require("../middlewares/auth");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 // import { verifyToken } from "../middlewares/verify";
 const registerLimiter = (0, express_rate_limit_1.default)({
@@ -23,7 +22,7 @@ class AuthRouter {
     initializeRoutes() {
         this.router.post("/register", registerLimiter, this.authController.register);
         this.router.patch("/verify", verify_1.verifyTokenVerification, this.authController.verify);
-        this.router.post("/login", auth_1.authenticateToken, this.authController.login);
+        this.router.post("/login", this.authController.login);
         this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
         this.router.patch("/verify-reset-pwd", verify_1.verifyTokenVerification, this.authController.verifyResetPassword);
         // this.router.post("/reset-pwd", this.authController.resetPassword.bind(this.authController));        

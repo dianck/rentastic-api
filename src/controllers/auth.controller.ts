@@ -382,6 +382,13 @@ curl -X POST http://localhost:8000/api/auth/register \
   }'
 
 
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "login": "graha",
+    "password": "Asd123"
+  }'
+
 curl -X PATCH http://localhost:8000/api/auth/verify \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsImlhdCI6MTc1MTQ0MTgwOCwiZXhwIjoxNzUxNDQyNDA4fQ.dWvOCUTZtrdtbY910Gw6817oBTw6TuqL17CiVIBBM7c"  
   
