@@ -12,6 +12,11 @@ const registerLimiter = rateLimit({
     message: "Too many registration attempts. Please try again later."
   });
 
+const loginLimiter = rateLimit({
+windowMs: 10 * 60 * 1000, // 10 menit
+max: 2, // Maks 5 kali register per IP per 10 menit
+message: "Too many registration attempts. Please try again later."
+});
 
 export default class AuthRouter{
     private router :  Router;
@@ -29,7 +34,7 @@ export default class AuthRouter{
             "/verify", 
             verifyTokenVerification, 
         this.authController.verify);
-        this.router.post("/login", this.authController.login);
+        this.router.post("/login", loginLimiter, this.authController.login);
         // this.router.post("/login", authenticateToken, this.authController.login);
         this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
 
