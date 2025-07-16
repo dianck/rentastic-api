@@ -398,4 +398,12 @@ for i in {1..4}; do
     -d '{"username":"user'$i'", "email":"user'$i'@test.com", "password":"123456"}'
 done
 
+
+
+curl -X POST https://cash-mgmt-be.vercel.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "login": "graha",
+    "password": "Asd123"
+  }'
 */
