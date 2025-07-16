@@ -385,4 +385,10 @@ curl -X POST http://localhost:8000/api/auth/register \
 curl -X PATCH http://localhost:8000/api/auth/verify \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsImlhdCI6MTc1MTQ0MTgwOCwiZXhwIjoxNzUxNDQyNDA4fQ.dWvOCUTZtrdtbY910Gw6817oBTw6TuqL17CiVIBBM7c"  
   
+for i in {1..4}; do
+  curl -X POST https://cash-mgmt-be.vercel.app/api/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"username":"user'$i'", "email":"user'$i'@test.com", "password":"123456"}'
+done
+
 */
