@@ -1,7 +1,7 @@
 import { Router } from "express";
 import AuthController from "../controllers/auth.controller";
 import { verifyTokenVerification } from "../middlewares/verify";
-import { authenticateToken } from "../middlewares/auth";
+// import { authenticateToken } from "../middlewares/auth";
 import rateLimit from "express-rate-limit";
 
 // import { verifyToken } from "../middlewares/verify";
@@ -35,7 +35,6 @@ export default class AuthRouter{
             verifyTokenVerification, 
         this.authController.verify);
         this.router.post("/login", loginLimiter, this.authController.login);
-        // this.router.post("/login", authenticateToken, this.authController.login);
         this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
 
         this.router.patch(
