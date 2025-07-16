@@ -16,7 +16,7 @@ const registerLimiter = (0, express_rate_limit_1.default)({
     message: "Too many registration attempts. Please try again later."
 });
 const loginLimiter = (0, express_rate_limit_1.default)({
-    windowMs: 1 * 60 * 1000, // 10 menit
+    windowMs: 10 * 60 * 1000, // 10 menit
     // max: 3, // Maks 5 kali register per IP per 10 menit
     max: Number(process.env.LOGIN_LIMITER) || 5, // Maks 5 kali register per IP per 10 menit
     message: "Too many login attempts. Please try again later."
