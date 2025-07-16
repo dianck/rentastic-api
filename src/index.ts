@@ -1,32 +1,44 @@
-// Load environment variables
 import dotenv from 'dotenv';
 dotenv.config();
 
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import AuthRouter from './routers/auth.router';
-import testRouter from './routers/test.route'; // ✅ Router tambahan (misalnya test prisma)
+import testRouter from './routers/test.route';
 
 const PORT: number = Number(process.env.PORT) || 8000;
-
 const app: Application = express();
 
-// 🧠 Set proxy trust *sebelum* middleware lain (untuk rate-limit, ip detection, dsb)
+// 🧠 Set trust proxy (penting untuk rate limit & IP detect di Vercel)
 app.set('trust proxy', true);
 
-// 📦 Middleware global
+// 🔍 Optional debug IP (remove in production)
+// app.use((req, _res, next) => { console.log(`[IP]`, req.ip); next(); });
+
+// 📦 Middlewares
 app.use(cors());
 app.use(express.json());
 
-// 🛠 Simple healthcheck
+// ✅ Healthcheck endpoint
 app.get('/api', (_req: Request, res: Response) => {
   res.status(200).json({ message: 'Welcome to My API!' });
 });
 
-// 🚪 Router group
+// 🛣️ API routes
 const authRouter = new AuthRouter();
 app.use('/api/auth', authRouter.getRouter());
-app.use('/api', testRouter); // Test route (contoh: /test-prisma)
+app.use('/api', testRouter);
+
+// 🛑 Fallback for unknown routes
+app.use((_req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
+// ❌ Global error handler
+app.use((err: any, _req: Request, res: Response) => {
+  console.error('❌ Unexpected Error:', err);
+  res.status(500).json({ message: 'Internal server error', error: err?.message || err });
+});
 
 // 🚀 Start server
 app.listen(PORT, () => {

@@ -3,38 +3,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// Load environment variables
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const auth_router_1 = __importDefault(require("./routers/auth.router"));
-const test_route_1 = __importDefault(require("./routers/test.route"));
+const test_route_1 = __importDefault(require("./routers/test.route")); // ✅ Router tambahan (misalnya test prisma)
 const PORT = Number(process.env.PORT) || 8000;
 const app = (0, express_1.default)();
-// 🧠 Set trust proxy (penting untuk rate limit & IP detect di Vercel)
+// 🧠 Set proxy trust *sebelum* middleware lain (untuk rate-limit, ip detection, dsb)
 app.set('trust proxy', true);
-// 🔍 Optional debug IP (remove in production)
-// app.use((req, _res, next) => { console.log(`[IP]`, req.ip); next(); });
-// 📦 Middlewares
+// 📦 Middleware global
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// ✅ Healthcheck endpoint
+// 🛠 Simple healthcheck
 app.get('/api', (_req, res) => {
     res.status(200).json({ message: 'Welcome to My API!' });
 });
-// 🛣️ API routes
+// 🚪 Router group
 const authRouter = new auth_router_1.default();
 app.use('/api/auth', authRouter.getRouter());
-app.use('/api', test_route_1.default);
-// 🛑 Fallback for unknown routes
-app.use((_req, res) => {
-    res.status(404).json({ message: 'Route not found' });
-});
-// ❌ Global error handler
-app.use((err, _req, res) => {
-    console.error('❌ Unexpected Error:', err);
-    res.status(500).json({ message: 'Internal server error', error: err?.message || err });
-});
+app.use('/api', test_route_1.default); // Test route (contoh: /test-prisma)
 // 🚀 Start server
 app.listen(PORT, () => {
     console.log(`✅ Server running at http://localhost:${PORT}`);

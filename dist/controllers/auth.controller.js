@@ -324,4 +324,25 @@ for i in {1..4}; do
     -d '{"username":"user'$i'", "email":"user'$i'@test.com", "password":"123456"}'
 done
 
+
+
+for i in {1..4}; do
+  curl -X POST https://cash-mgmt-be.vercel.app/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{
+      "login": "graha",
+      "password": "Asd123"
+    }'
+done
+
+for i in {1..4}; do
+  curl -X POST http://localhost:8000/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{
+      "login": "graha",
+      "password": "Asd123"
+    }'
+done
+
+
 */ 
