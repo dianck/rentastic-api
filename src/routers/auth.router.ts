@@ -8,14 +8,14 @@ import rateLimit from "express-rate-limit";
 
 const registerLimiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 menit
-    max: 3, // Maks 5 kali register per IP per 10 menit
+    max: Number(process.env.ACCOUNT_REGISTER_LIMITER) || 5, // Maks 5 kali register per IP per 10 menit
     message: "Too many registration attempts. Please try again later."
   });
 
 const loginLimiter = rateLimit({
 windowMs: 10 * 60 * 1000, // 10 menit
-max: 2, // Maks 5 kali register per IP per 10 menit
-message: "Too many registration attempts. Please try again later."
+max: Number(process.env.LOGIN_LIMITER) || 5, // Maks 5 kali register per IP per 10 menit
+message: "Too many login attempts. Please try again later."
 });
 
 export default class AuthRouter{
