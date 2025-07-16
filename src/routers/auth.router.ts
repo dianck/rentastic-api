@@ -35,6 +35,7 @@ export default class AuthRouter{
             verifyTokenVerification, 
         this.authController.verify);
         // this.router.post("/login", this.authController.login);
+        //
         this.router.post("/login", loginLimiter, this.authController.login);
         this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
 
