@@ -15,8 +15,8 @@ const registerLimiter = rateLimit({
 
 const loginLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 10 menit
-    // max: 2, // Maks 5 kali register per IP per 10 menit
-    max: Number(process.env.LOGIN_LIMITER) || 5, // Maks 5 kali register per IP per 10 menit
+    max: 3, // Maks 5 kali register per IP per 10 menit
+    // max: Number(process.env.LOGIN_LIMITER) || 5, // Maks 5 kali register per IP per 10 menit
     message: "Too many login attempts. Please try again later."
 });
 
