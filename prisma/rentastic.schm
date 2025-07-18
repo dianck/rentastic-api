@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String     @id @default(uuid())
+  name            String
+  email           String     @unique
+  password        String?
+  emailVerified   DateTime?
+  role            Role       @default(USER)
+  profileImage    String?
+  reviews         Review[]
+  reservations    Reservation[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Tenant {
+  id              String     @id @default(uuid())
+  name            String
+  email           String     @unique
+  password        String?
+  emailVerified   DateTime?
+  profileImage    String?
+  properties      Property[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Property {
+  id              String       @id @default(uuid())
+  name            String
+  description     String
+  location        String
+  picture         String
+  tenant          Tenant       @relation(fields: [tenantId], references: [id])
+  tenantId        String
+  category        PropertyCategory @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  rooms           Room[]
+  reviews         Review[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model PropertyCategory {
+  id              String     @id @default(uuid())
+  name            String     @unique
+  properties      Property[]
+}
+
+model Room {
+  id              String     @id @default(uuid())
+  property        Property   @relation(fields: [propertyId], references: [id])
+  propertyId      String
+  name            String
+  price           Float
+  description     String
+  availability    RoomAvailability[]
+  priceOverrides  PriceOverride[]
+  reservations    Reservation[]
+}
+
+model RoomAvailability {
+  id              String     @id @default(uuid())
+  room            Room       @relation(fields: [roomId], references: [id])
+  roomId          String
+  date            DateTime
+  isAvailable     Boolean
+}
+
+model PriceOverride {
+  id              String     @id @default(uuid())
+  room            Room       @relation(fields: [roomId], references: [id])
+  roomId          String
+  date            DateTime
+  newPrice        Float?
+  percentage      Float?      // Contoh: 10 untuk 10%
+}
+
+model Reservation {
+  id              String     @id @default(uuid())
+  user            User       @relation(fields: [userId], references: [id])
+  userId          String
+  room            Room       @relation(fields: [roomId], references: [id])
+  roomId          String
+  checkIn         DateTime
+  checkOut        DateTime
+  guests          Int
+  status          ReservationStatus
+  paymentProof    String?
+  totalPrice      Float
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Review {
+  id              String     @id @default(uuid())
+  user            User       @relation(fields: [userId], references: [id])
+  userId          String
+  property        Property   @relation(fields: [propertyId], references: [id])
+  propertyId      String
+  comment         String
+  reply           String?
+  createdAt       DateTime   @default(now())
+}
+
+model SalesReport {
+  id              String     @id @default(uuid())
+  tenant          Tenant     @relation(fields: [tenantId], references: [id])
+  tenantId        String
+  totalIncome     Float
+  fromDate        DateTime
+  toDate          DateTime
+  createdAt       DateTime   @default(now())
+}
+
+enum Role {
+  USER
+  TENANT
+}
+
+enum ReservationStatus {
+  PENDING
+  WAITING_PAYMENT
+  CONFIRMED
+  CANCELLED
+}

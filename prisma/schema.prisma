@@ -31,3 +31,4 @@ model email_verifications{
   createdAt DateTime @default(now())
   expiredAt DateTime 
 }
+

@@ -6,5 +6,6 @@ const router = Router();
 
 // Terapkan middleware otentikasi
 router.get('/test-prisma', authenticateToken, testPrismaConnection);
+// router.get('/test-prisma', testPrismaConnection);
 
 export default router;
