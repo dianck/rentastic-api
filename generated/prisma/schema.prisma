@@ -11,22 +11,171 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique @db.VarChar(100)
-  email      String   @unique
-  password   String
-  avatar     String?
-  user_code  Int      @default(0)
-  user_level Int      @default(1)
-  isVerified Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                Int                   @id @default(autoincrement())
+  username          String
+  email             String                @unique
+  password          String
+  avatar            String?
+  user_code         Int                   @default(0)
+  role              Role
+  orders            Order[]
+  reviews           Review[]
+  UserVerifications email_verifications[] @relation("UserVerifications")
+  properties        Property[]            @relation("UserProperties") // relasi balik untuk tenant
+  salesReports      SalesReport[]         @relation("UserSalesReports")
+  isVerified        Boolean               @default(false)
+  isAvailable       Boolean               @default(true)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
 }
 
 model email_verifications {
-  id        Int      @id @default(autoincrement())
-  userId    Int
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation("UserVerifications", fields: [userId], references: [id])
+
   token     String
   createdAt DateTime @default(now())
   expiredAt DateTime
+}
+
+enum Role {
+  USER
+  TENANT
+}
+
+model PropertyCategory {
+  id         String     @id @default(uuid())
+  name       String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  properties Property[]
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  location    String
+  picture     String?
+  categoryId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenantId Int
+  tenant   User             @relation("UserProperties", fields: [tenantId], references: [id])
+  category PropertyCategory @relation(fields: [categoryId], references: [id])
+  rooms    Room[]
+  orders   Order[]
+  reviews  Review[]
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Int
+  propertyId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  property       Property           @relation(fields: [propertyId], references: [id])
+  availabilities RoomAvailability[]
+  peakRates      PeakRate[]
+  orderItems     OrderItem[]
+}
+
+model RoomAvailability {
+  id          String   @id @default(uuid())
+  roomId      String
+  date        DateTime
+  isAvailable Boolean  @default(true)
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@unique([roomId, date])
+}
+
+model PeakRate {
+  id     String   @id @default(uuid())
+  roomId String
+  date   DateTime
+  type   RateType
+  amount Int // percentage or nominal depending on type
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@unique([roomId, date])
+}
+
+enum RateType {
+  PERCENTAGE
+  NOMINAL
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  propertyId   String
+  status       OrderStatus
+  startDate    DateTime
+  endDate      DateTime
+  totalAmount  Int
+  paymentProof String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  userId   Int
+  user     User        @relation(fields: [userId], references: [id])
+  property Property    @relation(fields: [propertyId], references: [id])
+  items    OrderItem[]
+}
+
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String
+  roomId  String
+  price   Int
+
+  order Order @relation(fields: [orderId], references: [id])
+  room  Room  @relation(fields: [roomId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  WAITING_PAYMENT
+  CONFIRMED
+  CANCELLED
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  propertyId String
+  comment    String
+  createdAt  DateTime @default(now())
+
+  userId   Int
+  user     User         @relation(fields: [userId], references: [id])
+  property Property     @relation(fields: [propertyId], references: [id])
+  reply    ReviewReply?
+}
+
+model ReviewReply {
+  id        String   @id @default(uuid())
+  reviewId  String   @unique
+  comment   String
+  createdAt DateTime @default(now())
+
+  review Review @relation(fields: [reviewId], references: [id])
+}
+
+model SalesReport {
+  id       String @id @default(uuid())
+  tenantId Int
+  tenant   User   @relation("UserSalesReports", fields: [tenantId], references: [id])
+
+  totalIncome Float
+  fromDate    DateTime
+  toDate      DateTime
+  createdAt   DateTime @default(now())
 }

@@ -50,6 +50,7 @@ export default class AuthController{
             username,
             email,
             password: hashedPassword,
+            role: "USER", 
           },
         });
 
@@ -152,6 +153,8 @@ export default class AuthController{
           password: true,
           avatar: true,
           isVerified: true,
+          role: true,
+          isAvailable: true,
           // Jangan ambil points langsung (array), akan kita jumlahkan terpisah
         }
       });
@@ -191,6 +194,93 @@ export default class AuthController{
     }
   }
 
+  async login_google(req: Request, res: Response) {
+    try {
+
+      const { email, name, picture } = req.body;
+
+      if (!email) {
+        res.status(400).json({ message: "Email is required" });
+        return;
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { email },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          password: true,
+          avatar: true,
+          isVerified: true,
+          isAvailable: true,
+          role: true,
+        },
+      });
+
+      if (user) {
+        console.log("isAvailable: ", user.isAvailable);
+
+        if (!user.isAvailable) {
+          res.status(403).json({ message: "User is blocked" });
+          return;
+        }
+
+        const token = sign({ id: user.id }, process.env.SECRET_KEY!, {
+          expiresIn: "1h",
+        });
+
+        res.status(200).json({
+          message: "Login success",
+          user,
+          token,
+        });
+
+      }else{
+
+        const salt = await genSalt(10);
+        const dummyPassword = await hash("google-oauth-placeholder", salt);
+
+        const newUser = await prisma.user.create({
+          data: {
+            email,
+            username: name,
+            avatar: picture,
+            isVerified: true,
+            isAvailable: true,
+            role: "USER",
+            password: dummyPassword,
+          },
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            avatar: true,
+            isVerified: true,
+            isAvailable: true,
+            role: true,
+          },
+        });
+
+        const token = sign({ id: newUser.id }, process.env.SECRET_KEY!, {
+          expiresIn: "1h",
+        });
+
+        res.status(201).json({
+          message: "User created & logged in",
+          user: newUser,
+          token,
+        });
+
+
+      }
+
+    } catch (err) {
+      console.error("Query error:", err);
+      res.status(500).send({ message: "Internal error", error: err });
+    }      
+  } 
+  
 
   async emailConfirmPasswordReset(req: Request, res: Response) {
     try {
@@ -387,6 +477,14 @@ curl -X POST http://localhost:8000/api/auth/login \
   -d '{
     "login": "graha",
     "password": "Asd123"
+  }'
+
+curl -X POST http://localhost:8000/api/auth/login-google \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "dianck2002@gmail.com",
+    "name": "Dian Candra Kusuma",
+    "picture": "dck.png"
   }'
 
 curl -X PATCH http://localhost:8000/api/auth/verify \

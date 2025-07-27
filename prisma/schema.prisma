@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id        Int     @id @default(autoincrement())
-  username  String  @unique @db.VarChar(100)
+  username  String  
   email     String  @unique
   password  String
   avatar    String?
@@ -24,6 +24,7 @@ model User {
   properties       Property[]     @relation("UserProperties") // relasi balik untuk tenant
   salesReports     SalesReport[]  @relation("UserSalesReports")
   isVerified Boolean @default(false)
+  isAvailable Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

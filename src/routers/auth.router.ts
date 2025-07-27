@@ -40,6 +40,11 @@ export default class AuthRouter{
         //
         //
         this.router.post("/login", loginLimiter, this.authController.login);
+        this.router.post("/login-google", loginLimiter, this.authController.login_google);
+        // this.router.post("/login-google", async (req, res) => {
+        // res.status(200).json({ message: "ok" }); // ✅ No return
+        // });  
+
         this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
 
         this.router.patch(
