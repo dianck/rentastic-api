@@ -1,10 +1,9 @@
 import { Router } from "express";
-import AuthController from "../controllers/auth.controller";
 import { verifyTokenVerification } from "../middlewares/verify";
-// import { authenticateToken } from "../middlewares/auth";
 import rateLimit from "express-rate-limit";
-
-// import { verifyToken } from "../middlewares/verify";
+import AuthLoginController from "../controllers/auth-login.controller";
+import AuthPasswordController from "../controllers/auth-password.controller";
+import AuthRegisterController from "../controllers/auth-register.controller";
 
 const registerLimiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 menit
@@ -22,44 +21,40 @@ const loginLimiter = rateLimit({
 
 export default class AuthRouter{
     private router :  Router;
-    private authController : AuthController;
+    private authRegisterController : AuthRegisterController;
+    private authLoginController : AuthLoginController;
+    private authPasswordController : AuthPasswordController;
 
     constructor(){
         this.router = Router();
-        this.authController = new AuthController();
+        this.authRegisterController = new AuthRegisterController();
+        this.authLoginController = new AuthLoginController();
+        this.authPasswordController = new AuthPasswordController();
         this.initializeRoutes();
     }
 
     private initializeRoutes(){
-        this.router.post("/register", registerLimiter, this.authController.register);
+        this.router.post("/register", registerLimiter, this.authRegisterController.register);
         this.router.patch(
             "/verify", 
             verifyTokenVerification, 
-        this.authController.verify);
-        // this.router.post("/login", this.authController.login);
-        //
-        //
-        this.router.post("/login", loginLimiter, this.authController.login);
-        this.router.post("/login-google", loginLimiter, this.authController.login_google);
-        // this.router.post("/login-google", async (req, res) => {
-        // res.status(200).json({ message: "ok" }); // ✅ No return
-        // });  
+        this.authRegisterController.verify);
+        this.router.post("/login", loginLimiter, this.authLoginController.login);
+        this.router.post("/login-google", loginLimiter, this.authLoginController.login_google);
 
-        this.router.post("/email-conf-pwd", this.authController.emailConfirmPasswordReset);
+        this.router.post("/email-conf-pwd", this.authPasswordController.emailConfirmPasswordReset);
 
         this.router.patch(
             "/verify-reset-pwd", 
             verifyTokenVerification, 
-        this.authController.verifyResetPassword);
+        this.authPasswordController.verifyResetPassword);
 
-        // this.router.post("/reset-pwd", this.authController.resetPassword.bind(this.authController));        
-        this.router.post("/reset-pwd", this.authController.resetPassword);
+        this.router.post("/reset-pwd", this.authPasswordController.resetPassword);
         
         
     }
 
     public getRouter(): Router{
-        // this.initializeRoutes();
         return this.router;
     }
 }
