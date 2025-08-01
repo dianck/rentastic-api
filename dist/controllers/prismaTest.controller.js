@@ -8,7 +8,11 @@ const testPrismaConnection = async (req, res) => {
     try {
         // Ganti dengan model yang kamu punya di schema.prisma
         const users = await prisma.user.findMany({
-            take: 1
+            take: 1,
+            select: {
+                username: true,
+                email: true,
+            },
         });
         res.status(200).json({
             message: '✅ Koneksi ke database berhasil.',
@@ -33,5 +37,10 @@ curl -X GET http://localhost:8000/api/test-prisma
 
 curl -X GET http://localhost:8000/api/test-prisma \
   -H "Authorization: Bearer AsdQweZxc"
+
+  
+curl -X GET https://finpro019-api.vercel.app/api/test-prisma \
+  -H "Authorization: Bearer AsdQweZxc"
  
+curl -X GET https://finpro019-api.vercel.app/api/test-prisma
  */ 
