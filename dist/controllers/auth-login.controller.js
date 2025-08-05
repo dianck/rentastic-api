@@ -32,6 +32,7 @@ class AuthLoginController {
                     avatar: true,
                     isVerified: true,
                     role: true,
+                    auth_type: true,
                     isAvailable: true,
                     // Jangan ambil points langsung (array), akan kita jumlahkan terpisah
                 }
@@ -80,6 +81,7 @@ class AuthLoginController {
                     email: true,
                     password: true,
                     avatar: true,
+                    auth_type: true,
                     isVerified: true,
                     isAvailable: true,
                     role: true,
@@ -102,7 +104,7 @@ class AuthLoginController {
             }
             else {
                 const salt = await (0, bcrypt_1.genSalt)(10);
-                const dummyPassword = await (0, bcrypt_1.hash)("google-oauth-placeholder", salt);
+                const dummyPassword = await (0, bcrypt_1.hash)("", salt);
                 const newUser = await prisma_1.default.user.create({
                     data: {
                         email,
@@ -111,6 +113,7 @@ class AuthLoginController {
                         isVerified: true,
                         isAvailable: true,
                         role: "USER",
+                        auth_type: "GOOGLE",
                         password: dummyPassword,
                     },
                     select: {
@@ -118,6 +121,7 @@ class AuthLoginController {
                         username: true,
                         email: true,
                         avatar: true,
+                        auth_type: true,
                         isVerified: true,
                         isAvailable: true,
                         role: true,

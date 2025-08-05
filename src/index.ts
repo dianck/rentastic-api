@@ -5,6 +5,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import AuthRouter from './routers/auth.router';
 import testRouter from './routers/test.route';
+import UserProfileRouter from './routers/user-profile.router';
 
 const PORT: number = Number(process.env.PORT) || 8000;
 const app: Application = express();
@@ -27,6 +28,11 @@ app.get('/api', (_req: Request, res: Response) => {
 // 🛣️ API routes
 const authRouter = new AuthRouter();
 app.use('/api/auth', authRouter.getRouter());
+
+
+const userProfileRouter = new UserProfileRouter();
+app.use("/api/user-profile", userProfileRouter.getRouter()); 
+
 app.use('/api', testRouter);
 
 // 🛑 Fallback for unknown routes

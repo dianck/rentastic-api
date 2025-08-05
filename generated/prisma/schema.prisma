@@ -16,6 +16,11 @@ model User {
   email             String                @unique
   password          String
   avatar            String?
+  birthdate         DateTime?
+  mobile_number     String?
+  residence         String?
+  gender            Gender?
+  auth_type         AuthType?
   user_code         Int                   @default(0)
   role              Role
   orders            Order[]
@@ -45,6 +50,16 @@ enum Role {
   TENANT
 }
 
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum AuthType {
+  CREDENTIAL
+  GOOGLE
+}
+
 model PropertyCategory {
   id         String     @id @default(uuid())
   name       String
@@ -58,6 +73,8 @@ model Property {
   name        String
   description String
   location    String
+  long        String
+  lot         String
   picture     String?
   categoryId  String
   createdAt   DateTime @default(now())
@@ -102,7 +119,7 @@ model PeakRate {
   roomId String
   date   DateTime
   type   RateType
-  amount Int // percentage or nominal depending on type
+  price  Int // percentage or nominal depending on type
 
   room Room @relation(fields: [roomId], references: [id])
 
