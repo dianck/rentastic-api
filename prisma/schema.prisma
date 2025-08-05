@@ -16,6 +16,11 @@ model User {
   email     String  @unique
   password  String
   avatar    String?
+  birthdate DateTime? 
+  mobile_number  String?
+  residence  String?
+  gender    Gender?
+  auth_type AuthType?
   user_code Int @default(0)
   role             Role
   orders           Order[]
@@ -44,6 +49,16 @@ model email_verifications{
 enum Role {
   USER
   TENANT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum AuthType {
+  CREDENTIAL
+  GOOGLE
 }
 
 model PropertyCategory {

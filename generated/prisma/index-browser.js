@@ -126,6 +126,11 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   avatar: 'avatar',
+  birthdate: 'birthdate',
+  mobile_number: 'mobile_number',
+  residence: 'residence',
+  gender: 'gender',
+  auth_type: 'auth_type',
   user_code: 'user_code',
   role: 'role',
   isVerified: 'isVerified',
@@ -154,6 +159,8 @@ exports.Prisma.PropertyScalarFieldEnum = {
   name: 'name',
   description: 'description',
   location: 'location',
+  long: 'long',
+  lot: 'lot',
   picture: 'picture',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
@@ -183,7 +190,7 @@ exports.Prisma.PeakRateScalarFieldEnum = {
   roomId: 'roomId',
   date: 'date',
   type: 'type',
-  amount: 'amount'
+  price: 'price'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -244,6 +251,16 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Gender = exports.$Enums.Gender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
+};
+
+exports.AuthType = exports.$Enums.AuthType = {
+  CREDENTIAL: 'CREDENTIAL',
+  GOOGLE: 'GOOGLE'
+};
+
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   TENANT: 'TENANT'

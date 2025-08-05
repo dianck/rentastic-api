@@ -37,6 +37,7 @@ export default class AuthLoginController{
           avatar: true,
           isVerified: true,
           role: true,
+          auth_type: true,
           isAvailable: true,
           // Jangan ambil points langsung (array), akan kita jumlahkan terpisah
         }
@@ -95,6 +96,7 @@ export default class AuthLoginController{
           email: true,
           password: true,
           avatar: true,
+          auth_type: true,
           isVerified: true,
           isAvailable: true,
           role: true,
@@ -122,7 +124,7 @@ export default class AuthLoginController{
       }else{
 
         const salt = await genSalt(10);
-        const dummyPassword = await hash("google-oauth-placeholder", salt);
+        const dummyPassword = await hash("", salt);
 
         const newUser = await prisma.user.create({
           data: {
@@ -132,6 +134,7 @@ export default class AuthLoginController{
             isVerified: true,
             isAvailable: true,
             role: "USER",
+            auth_type: "GOOGLE",
             password: dummyPassword,
           },
           select: {
@@ -139,6 +142,7 @@ export default class AuthLoginController{
             username: true,
             email: true,
             avatar: true,
+            auth_type: true,
             isVerified: true,
             isAvailable: true,
             role: true,
